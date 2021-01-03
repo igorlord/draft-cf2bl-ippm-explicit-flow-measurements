@@ -1,0 +1,259 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2021-01-03T01:08:02.650622+00:00",
+  "repo": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDk5OTIyOTQ2",
+      "title": "Reorganized the content of the draft",
+      "url": "https://github.com/igorlord/draft-mdt-ippm-explicit-flow-measurements/pull/1",
+      "state": "MERGED",
+      "author": "fabiobulgarella",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Created new macro sections \"Delay Bits\" and \"Loss Bits\".\r\nReorganized draft content.\r\nCreated a new small section for the Spin Bit.\r\nMoved Square Bit in its own section instead of repeating it inside QL and QR.\r\nCreated recap table for delay and loss bits.\r\nChecked and aligned terminology.",
+      "createdAt": "2020-10-08T13:28:32Z",
+      "updatedAt": "2020-10-13T15:17:24Z",
+      "baseRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "baseRefName": "master",
+      "baseRefOid": "834073a17ac5a0769a9ca20ad086853427fe7147",
+      "headRepository": "fabiobulgarella/draft-mdt-ippm-explicit-flow-measurements",
+      "headRefName": "master",
+      "headRefOid": "189669065e562a4848d84ac3bc55b4070a4add89",
+      "closedAt": "2020-10-13T15:17:24Z",
+      "mergedAt": "2020-10-13T15:17:24Z",
+      "mergedBy": "igorlord",
+      "mergeCommit": {
+        "oid": "2921763d416a79ce84af13e5e31f921fe896555e"
+      },
+      "comments": [
+        {
+          "author": "igorlord",
+          "authorAssociation": "OWNER",
+          "body": "I've two comments (I'll need to re-read the section again).\r\n\r\n1. We are trying to keep the number of required bit combinations to the minimum.  There is a new section now that requires 4 bits to be carried together.  Is this necessary?  Will not useful signal be obtained w/ fewer bits (a single bit or a pair) together?\r\n\r\n2. Any reason why normative language is removed by making it lower-case?",
+          "createdAt": "2020-10-12T15:50:53Z",
+          "updatedAt": "2020-10-12T15:50:53Z"
+        },
+        {
+          "author": "igorlord",
+          "authorAssociation": "OWNER",
+          "body": "I am now in-depth reading the PR.  Thanks for the good work, @fabiobulgarella.  The text does seem better organized.\r\n\r\nI have started working on a follow-up PR with some editorial changes (mostly removing redundant text) as well as a more fundamental concept of making it very clear what bits MUST be used with others and what can stand alone (even if the presence of others may improve the signal).",
+          "createdAt": "2020-10-12T16:45:20Z",
+          "updatedAt": "2020-10-12T16:45:20Z"
+        },
+        {
+          "author": "igorlord",
+          "authorAssociation": "OWNER",
+          "body": "Let's merge this and then work from here to edit more.",
+          "createdAt": "2020-10-13T15:15:39Z",
+          "updatedAt": "2020-10-13T15:15:39Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTA1NjQwNDg5",
+      "title": "Major editorial changes to Delay Bits (and above).",
+      "url": "https://github.com/igorlord/draft-mdt-ippm-explicit-flow-measurements/pull/2",
+      "state": "MERGED",
+      "author": "igorlord",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Major editorial changes to the draft from the beginning till the end of the Delay Bits.\r\nI tried to clarify the text and remove as many extra words as possible for the sake of clarity.\r\n\r\nPlease, review this for:\r\n\r\n1. Technical Problems\r\n\r\n2. Major Editorial Errors\r\n\r\nSince this is a large change, I would highly prefer it to be merged ASAP, and anything minor can be addressed as follow-up PRs.",
+      "createdAt": "2020-10-19T02:44:53Z",
+      "updatedAt": "2020-10-19T15:56:38Z",
+      "baseRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "baseRefName": "master",
+      "baseRefOid": "2921763d416a79ce84af13e5e31f921fe896555e",
+      "headRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "headRefName": "igorlord/update-delay-bits",
+      "headRefOid": "01e80abd2a062bbada849b3a4b8739c3f02c6718",
+      "closedAt": "2020-10-19T15:56:37Z",
+      "mergedAt": "2020-10-19T15:56:37Z",
+      "mergedBy": "igorlord",
+      "mergeCommit": {
+        "oid": "e8c83302cc35ec386db7e23e7c18d6903c34e1f5"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTA4NzM2MjYz",
+      "title": "Second part of major editorial revisions.",
+      "url": "https://github.com/igorlord/draft-mdt-ippm-explicit-flow-measurements/pull/3",
+      "state": "MERGED",
+      "author": "igorlord",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Technical changes:\r\n\r\n1. Updatd T bit marking generation token algorithm. Instead of sending\r\n   at most one marked packet after an incoming packet, the new\r\n   algorithm implements a counters for incoming packets, so multiple\r\n   incoming pakcets may earn multiple tokens for marking outgoing\r\n   packets.\r\n\r\n2. Fixed math for R bit. You cannot add/subtract loss fractions.\r\n\r\n3. Added discussion of signal fidelity and delay.\r\n\r\n4. Updated the bit summary matrix with additional data.",
+      "createdAt": "2020-10-23T05:53:47Z",
+      "updatedAt": "2020-10-27T00:06:38Z",
+      "baseRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "baseRefName": "master",
+      "baseRefOid": "e8c83302cc35ec386db7e23e7c18d6903c34e1f5",
+      "headRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "headRefName": "igorlord/update-loss-bits",
+      "headRefOid": "dda51e18d213f82ae876503cf7e88e9db037b6d7",
+      "closedAt": "2020-10-27T00:06:37Z",
+      "mergedAt": "2020-10-27T00:06:37Z",
+      "mergedBy": "igorlord",
+      "mergeCommit": {
+        "oid": "c5296100a9cb9d44d2904052a98ba5bd1b964df9"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTExNTEyMzIw",
+      "title": "Small editorial revisions.",
+      "url": "https://github.com/igorlord/draft-mdt-ippm-explicit-flow-measurements/pull/4",
+      "state": "MERGED",
+      "author": "fabiobulgarella",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "1) Added some clarifications.\r\n2) Aligned the style of the titles.\r\n3) Corrected some typos and formatting errors.\r\n",
+      "createdAt": "2020-10-28T12:33:01Z",
+      "updatedAt": "2020-10-28T13:56:19Z",
+      "baseRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "baseRefName": "master",
+      "baseRefOid": "c5296100a9cb9d44d2904052a98ba5bd1b964df9",
+      "headRepository": "fabiobulgarella/draft-mdt-ippm-explicit-flow-measurements",
+      "headRefName": "master",
+      "headRefOid": "a592c0895c62ac0f9c4d9c4f09d8e9ea94b97cdf",
+      "closedAt": "2020-10-28T13:56:19Z",
+      "mergedAt": "2020-10-28T13:56:18Z",
+      "mergedBy": "igorlord",
+      "mergeCommit": {
+        "oid": "c77fb2ec8fe2e9110f79ce99b68d5f91892626a6"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NTE4Njg2Mzkz",
+          "commit": {
+            "abbreviatedOid": "a592c08"
+          },
+          "author": "igorlord",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "I like the changes.  Thank you for the insight.\r\n\r\nI'll have a minor follow-up PR",
+          "createdAt": "2020-10-28T13:56:01Z",
+          "updatedAt": "2020-10-28T13:56:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTEzMTg3ODEy",
+      "title": "Removed observer loss from matrix, explain pure ACKs, editorial",
+      "url": "https://github.com/igorlord/draft-mdt-ippm-explicit-flow-measurements/pull/5",
+      "state": "MERGED",
+      "author": "igorlord",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "- Explained a problem with undetected loss of pure ACKs for L bit.\r\n- Removed Observer loss from a list of measured quantities, since it is not a precise or certain enough measurement \r\n- Minor editorial changes.",
+      "createdAt": "2020-10-30T17:54:04Z",
+      "updatedAt": "2020-11-02T14:48:36Z",
+      "baseRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "baseRefName": "master",
+      "baseRefOid": "c77fb2ec8fe2e9110f79ce99b68d5f91892626a6",
+      "headRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "headRefName": "igorlord/responding-to-feedback",
+      "headRefOid": "f57c358d143f495436bb21c1e9427fb17cc93eb4",
+      "closedAt": "2020-11-02T14:48:35Z",
+      "mergedAt": "2020-11-02T14:48:35Z",
+      "mergedBy": "igorlord",
+      "mergeCommit": {
+        "oid": "4a975ad21c95d339a7a09639373cc947bcbe5ffd"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTEzMzE1MzIz",
+      "title": "Change section name from Delay Bits to Latency Bits",
+      "url": "https://github.com/igorlord/draft-mdt-ippm-explicit-flow-measurements/pull/6",
+      "state": "MERGED",
+      "author": "igorlord",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-10-30T22:33:18Z",
+      "updatedAt": "2020-11-02T14:48:58Z",
+      "baseRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "baseRefName": "master",
+      "baseRefOid": "c77fb2ec8fe2e9110f79ce99b68d5f91892626a6",
+      "headRepository": "igorlord/draft-mdt-ippm-explicit-flow-measurements",
+      "headRefName": "igorlord/rename-latency",
+      "headRefOid": "febfda4dfee6c280c638cef592041fb167e08f3b",
+      "closedAt": "2020-11-02T14:48:57Z",
+      "mergedAt": "2020-11-02T14:48:57Z",
+      "mergedBy": "igorlord",
+      "mergeCommit": {
+        "oid": "aec9d029f0f6fdf8ef5cd63b9923d55faea1fd8a"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
