@@ -5,7 +5,7 @@
 IPPM                                                         M. Cociglio
 Internet-Draft                                            Telecom Italia
 Intended status: Informational                               A. Ferrieux
-Expires: 6 May 2021                                          Orange Labs
+Expires: 27 August 2021                                      Orange Labs
                                                              G. Fioccola
                                                      Huawei Technologies
                                                              I. Lubashev
@@ -20,7 +20,7 @@ Expires: 6 May 2021                                          Orange Labs
                                                    Politecnico di Torino
                                                              D. Tikhonov
                                                   LiteSpeed Technologies
-                                                         2 November 2020
+                                                        23 February 2021
 
 
                  Explicit Flow Measurements Techniques
@@ -53,9 +53,9 @@ Discussion Venues
 
 
 
-Cociglio, et al.           Expires 6 May 2021                   [Page 1]
+Cociglio, et al.         Expires 27 August 2021                 [Page 1]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 Status of This Memo
@@ -73,11 +73,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 May 2021.
+   This Internet-Draft will expire on 27 August 2021.
 
 Copyright Notice
 
-   Copyright (c) 2020 IETF Trust and the persons identified as the
+   Copyright (c) 2021 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -91,84 +91,68 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   4
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Notational Conventions  . . . . . . . . . . . . . . . . . . .   5
    3.  Latency Bits  . . . . . . . . . . . . . . . . . . . . . . . .   5
      3.1.  Spin Bit  . . . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  Delay Bit . . . . . . . . . . . . . . . . . . . . . . . .   6
-       3.2.1.  Generation Phase  . . . . . . . . . . . . . . . . . .   8
+       3.2.1.  Generation Phase  . . . . . . . . . . . . . . . . . .   9
        3.2.2.  Reflection Phase  . . . . . . . . . . . . . . . . . .   9
-       3.2.3.  Two Bits Delay Measurement: Spin Bit + Delay Bit  . .  10
-       3.2.4.  Observer's Algorithm and Edge Rejection Interval  . .  12
-   4.  Loss Bits . . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     4.1.  T Bit - Round Trip Loss Bit . . . . . . . . . . . . . . .  14
-       4.1.1.  Round Trip Packet Loss Measurement  . . . . . . . . .  15
+       3.2.3.  T_Max Selection . . . . . . . . . . . . . . . . . . .  10
+       3.2.4.  Delay Measurement using Delay Bit . . . . . . . . . .  11
+       3.2.5.  Observer's Algorithm  . . . . . . . . . . . . . . . .  13
+       3.2.6.  Two Bits Delay Measurement: Spin Bit + Delay Bit  . .  14
+   4.  Loss Bits . . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     4.1.  T Bit -- Round Trip Loss Bit  . . . . . . . . . . . . . .  15
+       4.1.1.  Round Trip Packet Loss Measurement  . . . . . . . . .  16
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 2]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
        4.1.2.  Setting the Round Trip Loss Bit on Outgoing
-               Packets . . . . . . . . . . . . . . . . . . . . . . .  16
-       4.1.3.  Observer's Logic for Round Trip Loss Signal . . . . .  17
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 2]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
-       4.1.4.  Loss Coverage and Signal Timing . . . . . . . . . . .  18
-     4.2.  Q Bit - Square Bit  . . . . . . . . . . . . . . . . . . .  18
-       4.2.1.  Q Block Length Selection  . . . . . . . . . . . . . .  18
-       4.2.2.  Upstream Loss . . . . . . . . . . . . . . . . . . . .  19
-       4.2.3.  Identifying Q Block Boundaries  . . . . . . . . . . .  20
-     4.3.  L Bit - Loss Event Bit  . . . . . . . . . . . . . . . . .  20
-       4.3.1.  End-To-End Loss . . . . . . . . . . . . . . . . . . .  21
-       4.3.2.  Loss Profile Characterization . . . . . . . . . . . .  21
-     4.4.  L+Q Bits - Upstream, Downstream, and End-to-End Loss
-           Measurements  . . . . . . . . . . . . . . . . . . . . . .  21
-       4.4.1.  Correlating End-to-End and Upstream Loss  . . . . . .  22
-     4.5.  R Bit - Reflection Square Bit . . . . . . . . . . . . . .  23
-       4.5.1.  R+Q Bits - Using R and Q Bits for Passive Loss
-               Measurement . . . . . . . . . . . . . . . . . . . . .  24
-       4.5.2.  Enhancement of R Block Length Computation . . . . . .  28
-       4.5.3.  Improved Resilience to Packet Reordering  . . . . . .  28
-   5.  Summary of Delay and Loss Marking Methods . . . . . . . . . .  28
-   6.  ECN-Echo Event Bit  . . . . . . . . . . . . . . . . . . . . .  30
-     6.1.  Setting the ECN-Echo Event Bit on Outgoing Packets  . . .  30
+               Packets . . . . . . . . . . . . . . . . . . . . . . .  17
+       4.1.3.  Observer's Logic for Round Trip Loss Signal . . . . .  18
+       4.1.4.  Loss Coverage and Signal Timing . . . . . . . . . . .  19
+     4.2.  Q Bit -- Square Bit . . . . . . . . . . . . . . . . . . .  19
+       4.2.1.  Q Block Length Selection  . . . . . . . . . . . . . .  19
+       4.2.2.  Upstream Loss . . . . . . . . . . . . . . . . . . . .  20
+       4.2.3.  Identifying Q Block Boundaries  . . . . . . . . . . .  21
+     4.3.  L Bit -- Loss Event Bit . . . . . . . . . . . . . . . . .  21
+       4.3.1.  End-To-End Loss . . . . . . . . . . . . . . . . . . .  22
+       4.3.2.  Loss Profile Characterization . . . . . . . . . . . .  22
+     4.4.  L+Q Bits -- Upstream, Downstream, and End-to-End Loss
+           Measurements  . . . . . . . . . . . . . . . . . . . . . .  22
+       4.4.1.  Correlating End-to-End and Upstream Loss  . . . . . .  23
+     4.5.  R Bit -- Reflection Square Bit  . . . . . . . . . . . . .  24
+       4.5.1.  R+Q Bits -- Using R and Q Bits for Passive Loss
+               Measurement . . . . . . . . . . . . . . . . . . . . .  25
+       4.5.2.  Enhancement of R Block Length Computation . . . . . .  29
+       4.5.3.  Improved Resilience to Packet Reordering  . . . . . .  29
+   5.  Summary of Delay and Loss Marking Methods . . . . . . . . . .  29
+   6.  ECN-Echo Event Bit  . . . . . . . . . . . . . . . . . . . . .  32
+     6.1.  Setting the ECN-Echo Event Bit on Outgoing Packets  . . .  32
      6.2.  Using E Bit for Passive ECN-Reported Congestion
-           Measurement . . . . . . . . . . . . . . . . . . . . . . .  30
-   7.  Protocol Ossification Considerations  . . . . . . . . . . . .  31
-   8.  Examples of Application . . . . . . . . . . . . . . . . . . .  31
-     8.1.  QUIC  . . . . . . . . . . . . . . . . . . . . . . . . . .  31
-     8.2.  TCP . . . . . . . . . . . . . . . . . . . . . . . . . . .  32
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  32
-     9.1.  Optimistic ACK Attack . . . . . . . . . . . . . . . . . .  32
-   10. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  33
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  33
-   12. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  33
-   13. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  33
-   14. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  34
-   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  34
-     15.1.  Normative References . . . . . . . . . . . . . . . . . .  34
-     15.2.  Informative References . . . . . . . . . . . . . . . . .  35
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  37
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 3]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
+           Measurement . . . . . . . . . . . . . . . . . . . . . . .  32
+   7.  Protocol Ossification Considerations  . . . . . . . . . . . .  33
+   8.  Examples of Application . . . . . . . . . . . . . . . . . . .  33
+     8.1.  QUIC  . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+     8.2.  TCP . . . . . . . . . . . . . . . . . . . . . . . . . . .  34
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  34
+     9.1.  Optimistic ACK Attack . . . . . . . . . . . . . . . . . .  35
+   10. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  35
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  36
+   12. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  36
+   13. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  36
+   14. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  36
+   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  36
+     15.1.  Normative References . . . . . . . . . . . . . . . . . .  36
+     15.2.  Informative References . . . . . . . . . . . . . . . . .  37
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  39
 
 1.  Introduction
 
@@ -178,6 +162,14 @@ Internet-Draft             Delay and Loss bits             November 2020
    crippling end-to-end throughput issues.  To this effect, in a TCP-
    dominated world, network operators have been heavily relying on
    information present in the clear in TCP headers: sequence and
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 3]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    acknowledgment numbers and SACKs when enabled (see [RFC8517]).  These
    allow for quantitative estimation of packet loss and delay by passive
    on-path observation.  Additionally, the problem can be quickly
@@ -216,16 +208,6 @@ Internet-Draft             Delay and Loss bits             November 2020
    [UDP-OPTIONS] and [UDP-SURPLUS]), reserved bits in a QUIC v1 header
    (see [QUIC-TRANSPORT]).
 
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 4]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    The measurements are not designed for use in automated control of the
    network in environments where signal bits are set by untrusted hosts.
    Instead, the signal is to be used for troubleshooting individual
@@ -236,6 +218,13 @@ Internet-Draft             Delay and Loss bits             November 2020
    The spin bit, delay bit and loss bits explained in this document are
    inspired by [AltMark], [SPIN-BIT], [I-D.trammell-tsvwg-spin] and
    [I-D.trammell-ippm-spin].
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 4]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
    Additional details about the Performance Measurements for QUIC are
    described in the paper [ANRW19-PM-QUIC].
@@ -248,7 +237,7 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 3.  Latency Bits
 
-   This section introduces bits that can be used for round trip latecy
+   This section introduces bits that can be used for round trip latency
    measurements.  Whenever this section of the specification refers to
    packets, it is referring only to packets with protocol headers that
    include the latency bits.
@@ -260,10 +249,10 @@ Internet-Draft             Delay and Loss bits             November 2020
    reordering of the spin bit and increase fidelity of the signal in
    less than ideal network conditions.
 
-   This document introduces an additional single-bit delay signal that
-   can be used together with the spin bit by passive observers to
-   measure the RTT of a network flow, avoiding the spin bit ambiguities
-   that arise as soon as network conditions deteriorate.
+   This document introduces a stand-alone single-bit delay signal that
+   can be used by passive observers to measure the RTT of a network
+   flow, avoiding the spin bit ambiguities that arise as soon as network
+   conditions deteriorate.
 
 3.1.  Spin Bit
 
@@ -274,14 +263,6 @@ Internet-Draft             Delay and Loss bits             November 2020
    where the size of the alternation changes with the flight size each
    RTT.
 
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 5]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    The latency spin bit is a single bit signal that toggles once per
    RTT, enabling latency monitoring of a connection-oriented
    communication from intermediate observation points.
@@ -289,6 +270,17 @@ Internet-Draft             Delay and Loss bits             November 2020
    A "spin period" is a set of packets with the same spin bit value sent
    during one RTT time interval.  A "spin period value" is the value of
    the spin bit shared by all packets in a spin period.
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 5]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
    The client and server maintain an internal per-connection spin value
    (i.e. 0 or 1) used to set the spin bit on outgoing packets.  Both
@@ -319,9 +311,8 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 3.2.  Delay Bit
 
-   The delay bit, different from a two-bit VEC, has been designed to
-   overcome accuracy limitations experienced by the spin bit under
-   difficult network conditions:
+   The delay bit has been designed to overcome accuracy limitations
+   experienced by the spin bit under difficult network conditions:
 
    *  packet reordering leads to generation of spurious edges and errors
       in delay estimation;
@@ -329,111 +320,146 @@ Internet-Draft             Delay and Loss bits             November 2020
    *  loss of edges causes wrong estimation of spin periods and
       therefore wrong RTT measurements;
 
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 6]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    *  application-limited senders cause the spin bit to measure the
       application delays instead of network delays.
 
-   If enabled, delay bit has to be used in addition to the spin bit.
    Unlike the spin bit, which is set in every packet transmitted on the
    network, the delay bit is set only once per round trip.
 
-   When the delay bit is used, a single packet with a second marked bit
-   (the delay bit) bounces between a client and a server during the
-   entire connection lifetime.  This single packet is called "delay
-   sample".
+   When the delay bit is used, a single packet with a marked bit (the
+   delay bit) bounces between a client and a server during the entire
+   connection lifetime.  This single packet is called "delay sample".
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 6]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
    An observer placed at an intermediate point, observing a single
    direction of traffic, tracking the delay sample and the relative
-   timestamp in every spin period, can measure the round trip delay of
-   the connection.
+   timestamp, can measure the round trip delay of the connection.
 
    The delay sample lifetime is comprised of two phases: initialization
    and reflection.  The initialization is the generation of the delay
    sample, while the reflection realizes the bounce behavior of this
    single packet between the two endpoints.
 
-   The next figure describes the Delay bit mechanism: the first bit is
-   the spin bit and the second one is the delay bit.
+   The next figure describes the elementary Delay bit mechanism.
 
-         +--------+   --  --  --  --  --   +--------+
-         |        |       ----------->     |        |
-         | Client |                        | Server |
-         |        |      <-----------      |        |
-         +--------+   --  --  --  --  --   +--------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 7]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
+         +--------+   -   -   -   -   -   +--------+
+         |        |      ----------->     |        |
+         | Client |                       | Server |
+         |        |     <-----------      |        |
+         +--------+   -   -   -   -   -   +--------+
 
          (a) No traffic at beginning.
 
-         +--------+   00  00  01  --  --   +--------+
-         |        |       ----------->     |        |
-         | Client |                        | Server |
-         |        |      <-----------      |        |
-         +--------+   --  --  --  --  --   +--------+
+         +--------+   0   0   1   -   -   +--------+
+         |        |      ----------->     |        |
+         | Client |                       | Server |
+         |        |     <-----------      |        |
+         +--------+   -   -   -   -   -   +--------+
 
           (b) The Client starts sending data and
            sets the first packet as Delay Sample.
 
-         +--------+   00  00  00  00  00   +--------+
-         |        |       ----------->     |        |
-         | Client |                        | Server |
-         |        |      <-----------      |        |
-         +--------+   --  --  01  00  00   +--------+
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 7]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
+         +--------+   0   0   0   0   0   +--------+
+         |        |      ----------->     |        |
+         | Client |                       | Server |
+         |        |     <-----------      |        |
+         +--------+   -   -   -   1   0   +--------+
 
           (c) The Server starts sending data
            and reflects the Delay Sample.
 
-         +--------+   10  10  11  00  00   +--------+
-         |        |       ----------->     |        |
-         | Client |                        | Server |
-         |        |      <-----------      |        |
-         +--------+   00  00  00  00  00   +--------+
+         +--------+   0   1   0   0   0   +--------+
+         |        |      ----------->     |        |
+         | Client |                       | Server |
+         |        |     <-----------      |        |
+         +--------+   0   0   0   0   0   +--------+
 
-         (d) The Client inverts the spin bit and
-          reflects the Delay Sample.
+         (d) The Client reflects the Delay Sample.
 
-         +--------+   10  10  10  10  10   +--------+
-         |        |       ----------->     |        |
-         | Client |                        | Server |
-         |        |      <-----------      |        |
-         +--------+   00  00  11  10  10   +--------+
+         +--------+   0   0   0   0   0   +--------+
+         |        |      ----------->     |        |
+         | Client |                       | Server |
+         |        |     <-----------      |        |
+         +--------+   0   0   0   1   0   +--------+
 
-         (e) The Server reflects the Delay Sample.
+         (e) The Server reflects the Delay Sample
+          and so on.
 
-         +--------+   00  00  01  10  10   +--------+
-         |        |       ----------->     |        |
-         | Client |                        | Server |
-         |        |      <-----------      |        |
-         +--------+   10  10  10  10  10   +--------+
+                       Figure 1: Delay bit mechanism
 
-         (f) The client reverts the spin
-          bit and reflects the Delay Sample.
 
-                      Figure 1: Spin bit and Delay bit
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 8]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
 3.2.1.  Generation Phase
 
-   Only client is actively involved in the generation phase.
+   Only client is actively involved in the generation phase.  It
+   maintains an internal per-flow timestamp variable ("ds_time") updated
+   every time a delay sample is transmitted.
 
-   When connection starts and spin bit is set to 0, the client
-   initializes the delay bit of the first packet to 1, so it becomes the
-   delay sample for that marking period.  Only this packet is marked
-   with the delay bit set to 1 for this round trip period; the other
-   ones will carry the spin bit, while the delay bit will be set to 0.
+   When connection starts, the client generates a new delay sample
+   initializing the delay bit of the first outgoing packet to 1.  Then
+   it updates the "ds_time" variable with the timestamp of its
+   transmission.
 
    The server initializes the delay bit to 0 at the beginning of the
    connection, and its only task during the connection is described in
@@ -443,82 +469,111 @@ Internet-Draft             Delay and Loss bits             November 2020
    between client and server continuously, for the entire duration of
    the connection.  That is highly unlikely for two reasons:
 
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 8]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    1.  the packet carrying the delay bit might be lost;
 
    2.  an endpoint could stop or delay sending packets because the
        application is limiting the amount of traffic transmitted;
 
-   To deal with these problems, the algorithm provides a procedure named
-   "recovery process" to regenerate the delay sample and to inform a
-   possible observer of the problem so the measurement can be restarted.
-
-3.2.1.1.  The Recovery Process
-
-   Absent packet loss or reordering, every spin period ends with a delay
-   sample inside.  If that does not happen and a spin period terminates
-   without a delay sample inside, the client waits a further spin
-   period; then, it creates a new delay sample by setting the delay bit
-   to 1 on the first outgoing packet of the subsequent period.
-
-   The spin period with all delay bits set to 0 informs observers that
-   there was a problem and delay measurements for this flow should be
-   reset till the next delay sample is received.
+   To deal with these problems, the client generates a new delay sample
+   if more than a predetermined time ("T_Max") has elapsed since the
+   last delay sample transmission (including reflections).  Note that
+   "T_Max" should be greater than the max measurable RTT on the network.
+   See Section 3.2.3 for details.
 
 3.2.2.  Reflection Phase
 
    Reflection is the process that enables the bouncing of the delay
    sample between a client and a server.  The behavior of the two
-   endpoints is slightly different.
+   endpoints is almost the same.
 
    *  Server side reflection: when a delay sample arrives, the server
       marks the first packet in the opposite direction as the delay
-      sample, if the outgoing packet has the same spin bit value as the
-      delay sample.  Otherwise, the delay sample is ignored.
+      sample.
 
    *  Client side reflection: when a delay sample arrives, the client
       marks the first packet in the opposite direction as the delay
-      sample, if the outgoing packet has the opposite spin bit value
-      then the delay sample.  Otherwise, the delay sample is ignored.
+      sample.  It also updates the "ds_time" variable when the outgoing
+      delay sample is actually forwarded.
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                 [Page 9]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
    In both cases, if the outgoing delay sample is being transmitted with
    a delay greater than a predetermined threshold after the reception of
    the incoming delay sample (1ms by default), the delay sample is not
    reflected, and the outgoing delay bit is kept at 0.
 
-   Note that reflection takes place for the delay sample regardless of
-   its position within the spin period, as long as it stays within its
-   original spin period.
+   By doing so, the algorithm can reject measurements that would
+   overestimate the delay due to lack of traffic on the endpoints.
+   Hence, the maximum estimation error would amount to twice the
+   threshold (e.g. 2ms) per measurement.
+
+3.2.3.  T_Max Selection
+
+   The internal "ds_time" variable allows a client to identify delay
+   sample losses.  Considering that a lost delay sample is regenerated
+   at the end of an explicit time ("T_Max") since the last generation,
+   this same value can be used by an observer to reject a measure and
+   start a new one.
+
+   In other words, if the difference in time between two delay samples
+   is greater or equal than "T_Max", then these cannot be used to
+   produce a delay measure.  Therefore the value of "T_Max" must also be
+   known to the on-path network probes.
+
+   There are two alternatives to select the "T_Max" value so that both
+   client and observers know it.  The first one requires that "T_Max" is
+   known a priori ("T_Max_p") and therefore set within the protocol
+   specifications that implements the marking mechanism (e.g. 1 second
+   which usually is greater than the max expectable RTT).  The second
+   alternative requires a dynamic mechanism able to adapt the duration
+   of the "T_Max" to the delay of the connection ("T_Max_c").
+
+   For instance, client and observers could use the connection RTT as a
+   basis for calculating an effective "T_Max".  They should use a
+   predetermined initial value so that "T_Max = T_Max_p" (e.g. 1 second)
+   and then, when a valid RTT is measured, change "T_Max" accordingly so
+   that "T_Max = T_Max_c".  In any case, the selected "T_Max" should be
+   large enough to absorb any possible variations in the connection
+   delay.
+
+   "T_Max_c" could be computed as two times the measured "RTT" plus a
+   fixed amount of time ("100ms") to prevent low "T_Max" values in case
+   of very small RTTs.  The resulting formula is: "T_Max_c = 2RTT +
+   100ms".  If "T_Max_c" is greater than "T_Max_p" then "T_Max_c" is
+   forced to "T_Max_p" value.
+
+   Note that the observer's "T_Max" should always be less than or equal
+   to the client's "T_Max" to avoid considering as a valid measurement
+   what is actually the client's "T_Max".  To obtain this result, the
 
 
 
-
-
-
-Cociglio, et al.           Expires 6 May 2021                   [Page 9]
+Cociglio, et al.         Expires 27 August 2021                [Page 10]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
-   A time threshold for the retransmission of the delay sample is used
-   to eliminate measurements that would overestimate the delay due to
-   lack of traffic on the endpoints.  Hence, the maximum estimation
-   error would amount to twice the threshold (e.g. 2ms) per measurement.
+   client waits for two consecutive incoming samples and computes the
+   two related RTTs.  Then it takes the largest of them as the basis of
+   the "T_Max_c" formula.  At this point, observers have already
+   measured a valid RTT and then computed their "T_Max_c".
 
-3.2.3.  Two Bits Delay Measurement: Spin Bit + Delay Bit
+3.2.4.  Delay Measurement using Delay Bit
 
    When the Delay Bit is used, a passive observer can use delay samples
    directly and avoid inherent ambiguities in the calculation of the RTT
-   in spin bit analysis, such as heuristic validation of the goodness of
-   an edge signal.
+   as can be seen in spin bit analysis.
 
-3.2.3.1.  RTT Measurement
+3.2.4.1.  RTT Measurement
 
    The delay sample generation process ensures that only one packet
    marked with the delay bit set to 1 runs back and forth between two
@@ -526,12 +581,9 @@ Internet-Draft             Delay and Loss bits             November 2020
    flow, an on-path passive observer computes the time difference
    between two delay samples observed in a single direction.
 
-   To ensure a valid measurement, the observer must identify spin
-   periods in the packet flow and assign delay samples to spin periods.
-   If a spin period is missing a delay sample, the measurement needs to
-   be restarted from the subsequent delay sample.  Hence, measurements
-   must take into account delay samples belonging to adjacent spin
-   periods.
+   To ensure a valid measurement, the observer must verify that the
+   distance in time between the two samples taken into account is less
+   than "T_Max".
 
               =======================|======================>
               = **********     -----Obs---->     ********** =
@@ -557,27 +609,27 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 10]
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 11]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
-3.2.3.2.  Half-RTT Measurement
+3.2.4.2.  Half-RTT Measurement
 
    An observer that is able to observe both forward and return traffic
    directions can use the delay samples to measure "upstream" and
    "downstream" RTT components, also known as the half-RTT measurements.
    It does this by measuring the time between a delay sample observed in
-   one direction and the reflected delay sample observed in the opposite
-   direction.
+   one direction and the delay sample previously observed in the
+   opposite direction.
 
-   As with RTT measurement, the observer must identify spin periods in
-   the packet flow and assign delay samples to spin periods.  If a spin
-   period is missing a delay sample, the measurement needs to be
-   restarted from the subsequent delay sample.  So a measurement, to be
-   valid, must take into account delay samples belonging to adjacent
-   periods, for the upstream component, or to the same period for the
-   downstream component.
+   As with RTT measurement, the observer must verify that the distance
+   in time between the two samples taken into account is less than
+   "T_Max".
 
    Note that upstream and downstream sections of paths between the
    endpoints and the observer, i.e. observer-to-client vs client-to-
@@ -603,22 +655,7 @@ Internet-Draft             Delay and Loss bits             November 2020
 
               Figure 3: Half Round-trip time (both direction)
 
-
-
-
-
-
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 11]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
-3.2.3.3.  Intra-Domain RTT Measurement
+3.2.4.3.  Intra-Domain RTT Measurement
 
    Intra-domain RTT is the portion of the entire RTT used by a flow to
    traverse the network of a provider.  To measure intra-domain RTT, two
@@ -626,6 +663,16 @@ Internet-Draft             Delay and Loss bits             November 2020
    employed simultaneously at ingress and egress of the network to be
    measured.  Intra-domain RTT is difference between the two computed
    upstream (or downstream) RTT components.
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 12]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
            =========================================>
            = =====================>
@@ -648,58 +695,59 @@ Internet-Draft             Delay and Loss bits             November 2020
 
      Figure 4: Intra-domain Round-trip time (client-observer: upstream)
 
-3.2.4.  Observer's Algorithm and Edge Rejection Interval
+3.2.5.  Observer's Algorithm
 
-   To provide a formal description of the observer behavior, we define a
-   "matching delay sample" to be a delay sample with the spin bit value
-   that matched the spin bit value of then-current spin period.
+   An on-path observer maintains an internal per-flow variable to keep
+   track of time at which the last delay sample has been observed.
 
-   Upon detecting a matching delay sample, if a matching delay sample
-   was also detected in the previous period, then the two delay samples
-   can be used to calculate RTT measurement.
+   A unidirectional observer, upon detecting a delay sample:
+
+   *  if a delay sample was also detected previously in the same
+      direction and the distance in time between them is less than
+      "T_Max - K", then the two delay samples can be used to calculate
+      RTT measurement.  "K" is a protection threshold to absorb
+      differences in "T_Max" computation and delay variations between
+      two consecutive delay samples (e.g.  "K = 10% T_Max").
 
    If the observer can observe both forward and return traffic flows,
    and it is able to determine which direction contains the client and
-   the server (e.g. by observing the spin bit or connection handshake):
+   the server (e.g. by observing the connection handshake), upon
+   detecting a delay sample:
 
-   *  If matching delay samples have been detected in both directions in
-      the current spin period, they can be used to measure the observer-
-      server half-RTT.
+   *  if a delay sample was also detected in the opposite direction and
+      the distance in time between them is less than "T_Max - K", then
+      the two delay samples can be used to measure the observer-client
+      half-RTT or the observer-server half-RTT, according to the
+      direction of the last delay sample observed.
 
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 12]
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 13]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
-   *  If a matching delay sample has been detected in client-to-observer
-      direction, AND a matching delay sample had been detected in
-      observer-to-client direction in the previous spin period, they can
-      be used to measure the observer-client half-RTT.
+3.2.6.  Two Bits Delay Measurement: Spin Bit + Delay Bit
 
-   The described observer behavior depends on the ability to accurately
-   identify current spin periods and to reject spurious spin edges,
-   caused by packet reordering.  Failure to do so will lead to many
-   missed measurement opportunities and will decrease the amount of
-   usable delay samples available to the observer.
+   Spin and Delay bit algorithms work independently.  If both marking
+   methods are used in the same connection, observers can choose the
+   best measurement between the two available:
 
-   To implement spurious edge rejection, every time a spin bit edge is
-   detected, the observer starts a new spin period and begins a time
-   interval during which it rejects spin edges (e.g. 5ms).  This
-   guarantees protection against spurious edges due to packets that have
-   been reordered by less than the time interval.  The mechanism only
-   works for intervals smaller than the RTT of the observed connection;
-   if RTT is smaller than the edge rejection interval, the observer
-   cannot measure the RTT.
+   *  when a precise measurement can be produced using the delay bit,
+      observers choose it;
+
+   *  when a delay bit measurement is not available, observers choose
+      the approximate spin bit one.
 
 4.  Loss Bits
 
    This section introduces bits that can be used for loss measurements.
    Whenever this section of the specification refers to packets, it is
    referring only to packets with protocol headers that include the loss
-   bits - the only packets whose loss can be measured.
+   bits -- the only packets whose loss can be measured.
 
    *  T: the "round Trip loss" bit is used in combination with the Spin
       bit to measure round-trip loss.  See Section 4.1.
@@ -722,21 +770,23 @@ Internet-Draft             Delay and Loss bits             November 2020
    separately for each separately identifiable flow (each sub-flow for
    multipath connections).
 
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 13]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    Since loss is reported independently for each flow, all bits (except
    for L bit) require a certain minimum number of packets to be
    exchanged per flow before any signal can be measured.  Therefore,
    loss measurements work best for flows that transfer more than a
    minimal amount of data.
 
-4.1.  T Bit - Round Trip Loss Bit
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 14]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
+4.1.  T Bit -- Round Trip Loss Bit
 
    The round Trip loss bit is used to mark a variable number of packets
    exchanged twice between the endpoints realizing a two round-trip
@@ -778,17 +828,19 @@ Internet-Draft             Delay and Loss bits             November 2020
    Since packet rates in two directions may be different, the number of
    marked packets in the train is determined by the direction with the
    lowest packet rate.  See Section 4.1.2 for details on packet
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 14]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    generation and for a mechanism to allow an observer to distinguish
    between trains belonging to different phases (Generation and
    Reflection).
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 15]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
 4.1.1.  Round Trip Packet Loss Measurement
 
@@ -835,14 +887,16 @@ Internet-Draft             Delay and Loss bits             November 2020
 
                      (b) observer-server half-RTPL
 
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 15]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
            Figure 6: Half Round-trip packet loss (both direction)
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 16]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
                               =========================================>
                                                 =====================> =
@@ -886,18 +940,24 @@ Internet-Draft             Delay and Loss bits             November 2020
        spent in generation, the reflection counter is unlocked to start
        counting incoming marked packets that will be reflected later;
 
+
+
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 17]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    2.  Pause Phase.  When the generation is completed, the client pauses
        till it has observed one entire spin bit period with no marked
        packets.  That spin bit period is used by the observer as a
        separator between generated and reflected packets.  During this
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 16]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
        marking pause, all the outgoing packets are transmitted with T
        bit set to 0.  The reflection counter is still incremented every
        time a marked packet arrives;
@@ -943,16 +1003,15 @@ Internet-Draft             Delay and Loss bits             November 2020
 
                   Figure 8: Round Trip Loss signal example
 
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 18]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    Note that 5 marked packets have been generated of which 4 have been
    reflected.
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 17]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
 
 4.1.4.  Loss Coverage and Signal Timing
 
@@ -976,7 +1035,7 @@ Internet-Draft             Delay and Loss bits             November 2020
    "packetsPerAck" can vary by protocol, by implementation, and by
    network conditions.
 
-4.2.  Q Bit - Square Bit
+4.2.  Q Bit -- Square Bit
 
    The sQuare bit (Q bit) takes its name from the square wave generated
    by its signal.  Every outgoing packet contains the Q bit value, which
@@ -998,17 +1057,18 @@ Internet-Draft             Delay and Loss bits             November 2020
 
    In this latter scenario, the sender is expected to choose N (Q Block
    length) based on the expected amount of loss and reordering on the
-   path.  The choice of N strikes a compromise - the observation could
+   path.  The choice of N strikes a compromise -- the observation could
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 19]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    become too unreliable in case of packet reordering and/or severe loss
    if N is too small, while short flows may not yield a useful upstream
    loss measurement if N is too large (see Section 4.2.2).
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 18]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
 
    The value of N should be at least 64 and be a power of 2.  This
    requirement allows an Observer to infer the Q Block length by
@@ -1057,13 +1117,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 19]
+Cociglio, et al.         Expires 27 August 2021                [Page 20]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 4.2.3.  Identifying Q Block Boundaries
@@ -1081,7 +1137,7 @@ Internet-Draft             Delay and Loss bits             November 2020
    multiple Q Blocks into fewer Q Blocks, if loss exceeds 50% for some Q
    Blocks.
 
-4.3.  L Bit - Loss Event Bit
+4.3.  L Bit -- Loss Event Bit
 
    The Loss Event bit uses an Unreported Loss counter maintained by the
    protocol that implements the marking mechanism.  To use the Loss
@@ -1117,9 +1173,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 20]
+Cociglio, et al.         Expires 27 August 2021                [Page 21]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
    For protocols, such as TCP ([TCP]), that allow network devices to
@@ -1157,7 +1213,7 @@ Internet-Draft             Delay and Loss bits             November 2020
    while observing blocks of packets with L bit set to 1 indicates loss
    affecting entire blocks of packets.
 
-4.4.  L+Q Bits - Upstream, Downstream, and End-to-End Loss Measurements
+4.4.  L+Q Bits -- Upstream, Downstream, and End-to-End Loss Measurements
 
    Combining L and Q bits allows a passive observer watching a single
    direction of traffic to accurately measure:
@@ -1173,9 +1229,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 21]
+Cociglio, et al.         Expires 27 August 2021                [Page 22]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 4.4.1.  Correlating End-to-End and Upstream Loss
@@ -1229,9 +1285,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 22]
+Cociglio, et al.         Expires 27 August 2021                [Page 23]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 4.4.1.2.  Observer Loss
@@ -1259,7 +1315,7 @@ Internet-Draft             Delay and Loss bits             November 2020
    to packets belonging to a single flow being multiplexed over several
    upstream paths with different latency characteristics.
 
-4.5.  R Bit - Reflection Square Bit
+4.5.  R Bit -- Reflection Square Bit
 
    R bit requires a deployment alongside Q bit.  Unlike the square
    signal for which packets are transmitted into blocks of fixed size,
@@ -1285,9 +1341,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 23]
+Cociglio, et al.         Expires 27 August 2021                [Page 24]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
    square signal which toggles every "M=p" packets (at first).  This new
@@ -1320,7 +1376,7 @@ Internet-Draft             Delay and Loss bits             November 2020
    sending R Blocks of the same size repeatedly before it can update the
    signal to account for a newly-completed Q Block.
 
-4.5.1.  R+Q Bits - Using R and Q Bits for Passive Loss Measurement
+4.5.1.  R+Q Bits -- Using R and Q Bits for Passive Loss Measurement
 
    Since both sQuare and Reflection square bits are toggled at most
    every N packets (except for the first transition of the R-bit as
@@ -1341,9 +1397,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 24]
+Cociglio, et al.         Expires 27 August 2021                [Page 25]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
    *  "three-quarters" connection loss: the loss between the receiver
@@ -1397,9 +1453,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 25]
+Cociglio, et al.         Expires 27 August 2021                [Page 26]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
                  Figure 10: Three-quarters connection loss
@@ -1434,13 +1490,13 @@ Internet-Draft             Delay and Loss bits             November 2020
 4.5.1.3.  Half Round-Trip Loss
 
    If the observer is able to observe both directions of traffic, it is
-   able to calculate two "half round-trip" loss measurements - loss from
-   the observer to the receiver (in a given direction) and then back to
-   the observer in the opposite direction.  For both directions, "half
-   round-trip" loss ("hrtloss") relates to "three-quarters" connection
-   loss ("tqloss_opposite") measured in the opposite direction and the
-   upstream loss ("uloss") measured in the given direction as
-   "(1-uloss)(1-hrtloss)=1-tqloss_opposite".  Hence,
+   able to calculate two "half round-trip" loss measurements -- loss
+   from the observer to the receiver (in a given direction) and then
+   back to the observer in the opposite direction.  For both directions,
+   "half round-trip" loss ("hrtloss") relates to "three-quarters"
+   connection loss ("tqloss_opposite") measured in the opposite
+   direction and the upstream loss ("uloss") measured in the given
+   direction as "(1-uloss)(1-hrtloss)=1-tqloss_opposite".  Hence,
    "hrtloss=(tqloss_opposite-uloss)/(1-uloss)".
 
 
@@ -1453,9 +1509,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 26]
+Cociglio, et al.         Expires 27 August 2021                [Page 27]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
            =======================>
@@ -1509,9 +1565,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 27]
+Cociglio, et al.         Expires 27 August 2021                [Page 28]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 4.5.2.  Enhancement of R Block Length Computation
@@ -1543,40 +1599,88 @@ Internet-Draft             Delay and Loss bits             November 2020
 
    This section summarizes the marking methods described in this draft.
 
-   For the Delay measurement, it is possible to use the spin bit alone
-   or combined with the delay bit.  A unidirectional or bidirectional
-   observer can be used.
-
-    +------------------+----+-------------------------+---------------+
-    | Method           |# of|        Available        |               |
-    |                  |bits|      Delay Metrics      |  Impairments  |
-    |                  |    +------------+------------+  Resiliency   |
-    |                  |    |   UNIDIR   |   BIDIR    |               |
-    |                  |    |  Observer  |  Observer  |               |
-    +------------------+----+------------+------------+---------------+
-    |S: Spin Bit       | 1  | RTT        | x2         | lower         |
-    |                  |    |            | Half RTT   |               |
-    +------------------+----+------------+------------+---------------+
-    |SD: Spin Bit +    | 2  | RTT        | x2         | higher        |
-    |    Delay Bit     |    |            | Half RTT   |               |
-    +------------------+----+------------+------------+---------------+
-
-    x2 Same metric for both directions.
+   For the Delay measurement, it is possible to use the spin bit and/or
+   the delay bit.  A unidirectional or bidirectional observer can be
+   used.
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 28]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 29]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
-                        Figure 14: Delay Comparison
+   +------------------+----+-------------------------+---------------+
+   | Method           |# of|        Available        |               |
+   |                  |bits|      Delay Metrics      |  Impairments  |
+   |                  |    +------------+------------+  Resiliency   |
+   |                  |    |   UNIDIR   |   BIDIR    |               |
+   |                  |    |  Observer  |  Observer  |               |
+   +------------------+----+------------+------------+---------------+
+   |S: Spin Bit       | 1  | RTT        | x2         | low           |
+   |                  |    |            | Half RTT   |               |
+   +------------------+----+------------+------------+---------------+
+   |D: Delay Bit      | 1  | RTT        | x2         | high          |
+   |                  |    |            | Half RTT   |               |
+   +------------------+----+------------+------------+---------------+
+   |SD: Spin Bit &    | 2  | RTT        | x2         | high          |
+   |    Delay Bit *   |    |            | Half RTT   |               |
+   +------------------+----+------------+------------+---------------+
+
+   x2 Same metric for both directions
+   *  Both algorithms work independtly; an observer could use
+      approximate spin bit measures when delay bit ones aren't available
+
+                       Figure 14: Delay Comparison
 
    For the Loss measurement, each row in the table of Figure 15
    represents a loss marking method.  For each method the table
    specifies the number of bits required in the header, the available
    metrics using an unidirectional or bidirectional observer, applicable
    protocols, measurement fidelity and delay.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 30]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
     +-------------+-+-----------------------+-+------------------------+
     | Method      |B|        Available      |P|  Measurement Aspects   |
@@ -1621,9 +1725,17 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 29]
+
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 31]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 6.  ECN-Echo Event Bit
@@ -1677,9 +1789,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 30]
+Cociglio, et al.         Expires 27 August 2021                [Page 32]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
 7.  Protocol Ossification Considerations
@@ -1702,7 +1814,7 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 8.1.  QUIC
 
-   The binding of the delay bit signal to QUIC is partially described in
+   The binding of a delay signal to QUIC is partially described in
    [QUIC-TRANSPORT], which adds the spin bit to the first byte of the
    short packet header, leaving two reserved bits for future
    experiments.
@@ -1711,13 +1823,13 @@ Internet-Draft             Delay and Loss bits             November 2020
    first byte of the short packet header can be modified as follows:
 
    *  the delay bit (D) can be placed in the first reserved bit (i.e.
-      the fourth most significant bit _0x10_) while the loss bit (L) in
-      the second reserved bit (i.e. the fifth most significant bit
-      _0x08_); the proposed scheme is:
+      the fourth most significant bit _0x10_) while the round trip loss
+      bit (T) in the second reserved bit (i.e. the fifth most
+      significant bit _0x08_); the proposed scheme is:
 
              0 1 2 3 4 5 6 7
             +-+-+-+-+-+-+-+-+
-            |0|1|S|D|L|K|P|P|
+            |0|1|S|D|T|K|P|P|
             +-+-+-+-+-+-+-+-+
 
                             Figure 16: Scheme 1
@@ -1733,9 +1845,9 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-Cociglio, et al.           Expires 6 May 2021                  [Page 31]
+Cociglio, et al.         Expires 27 August 2021                [Page 33]
 
-Internet-Draft             Delay and Loss bits             November 2020
+Internet-Draft             Delay and Loss bits             February 2021
 
 
                             Figure 17: Scheme 2A
@@ -1747,12 +1859,30 @@ Internet-Draft             Delay and Loss bits             November 2020
 
                             Figure 18: Scheme 2B
 
+   A further option would be to substitute the spin bit with the delay
+   bit leaving the two reserved bits for loss detection.  The proposed
+   schemes are:
+
+             0 1 2 3 4 5 6 7
+            +-+-+-+-+-+-+-+-+
+            |0|1|D|Q|L|K|P|P|
+            +-+-+-+-+-+-+-+-+
+
+                            Figure 19: Scheme 3A
+
+             0 1 2 3 4 5 6 7
+            +-+-+-+-+-+-+-+-+
+            |0|1|D|Q|R|K|P|P|
+            +-+-+-+-+-+-+-+-+
+
+                            Figure 20: Scheme 3B
+
 8.2.  TCP
 
    The signals can be added to TCP by defining bit 4 of byte 13 of the
-   TCP header to carry the spin bit, and eventually bits 5 and 6 to
-   carry additional information, like the delay bit and the round-trip
-   loss bit, or a two bits loss signal (QL or QR).
+   TCP header to carry the spin bit or the delay bit, and possibly bits
+   5 and 6 to carry additional information, like the delay bit and the
+   round-trip loss bit (DT), or a two bits loss signal (QL or QR).
 
 9.  Security Considerations
 
@@ -1760,6 +1890,21 @@ Internet-Draft             Delay and Loss bits             November 2020
    operations for a long time, so exposing loss and delay information to
    the network does not add new security concerns for protocols that are
    currently observable.
+
+
+
+
+
+
+
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 34]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
    In the absence of packet loss, Q and R bits signals do not provide
    any information that cannot be observed by simply counting packets
@@ -1785,15 +1930,6 @@ Internet-Draft             Delay and Loss bits             November 2020
    entire Q Block of packets, which renders the attack ineffective
    against a delay-sensitive congestion controller.
 
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 32]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    A protocol that is more susceptible to an Optimistic ACK Attack with
    the loss signal provided by Q bit and uses a loss-based congestion
    controller, should shorten the current Q Block by the number of
@@ -1809,7 +1945,7 @@ Internet-Draft             Delay and Loss bits             November 2020
 10.  Privacy Considerations
 
    To minimize unintentional exposure of information, loss bits provide
-   an explicit loss signal - a preferred way to share information per
+   an explicit loss signal -- a preferred way to share information per
    [RFC8558].
 
    New protocols commonly have specific privacy goals, and loss
@@ -1818,6 +1954,14 @@ Internet-Draft             Delay and Loss bits             November 2020
    Connection IDs in the middle of a connection to reduce the likelihood
    of a passive observer linking old and new sub-flows to the same
    device.  A QUIC implementation would need to reset all counters when
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 35]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    it changes the destination (IP address or UDP port) or the Connection
    ID used for outgoing packets.  It would also need to avoid
    incrementing Unreported Loss counter for loss of packets sent to a
@@ -1841,14 +1985,6 @@ Internet-Draft             Delay and Loss bits             November 2020
    *  Jari Arkko, Ericsson, jari.arkko@ericsson.com
 
    *  Emile Stephan, Orange, emile.stephan@orange.com
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 33]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
 
 14.  Acknowledgements
 
@@ -1874,6 +2010,14 @@ Internet-Draft             Delay and Loss bits             November 2020
               RFC 3168, DOI 10.17487/RFC3168, September 2001,
               <https://www.rfc-editor.org/info/rfc3168>.
 
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 36]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    [IP]       Postel, J., "Internet Protocol", STD 5, RFC 791,
               DOI 10.17487/RFC0791, September 1981,
               <https://www.rfc-editor.org/info/rfc791>.
@@ -1897,26 +2041,17 @@ Internet-Draft             Delay and Loss bits             November 2020
               RFC 8558, DOI 10.17487/RFC8558, April 2019,
               <https://www.rfc-editor.org/info/rfc8558>.
 
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 34]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
-
    [TCP]      Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
               <https://www.rfc-editor.org/info/rfc793>.
 
 15.2.  Informative References
 
-   [ACCURATE] Briscoe, B., Kuehlewind, M., and R. Scheffenegger, "More
+   [ACCURATE] Briscoe, B., Kühlewind, M., and R. Scheffenegger, "More
               Accurate ECN Feedback in TCP", Work in Progress, Internet-
-              Draft, draft-ietf-tcpm-accurate-ecn-12, 28 October 2020,
-              <http://www.ietf.org/internet-drafts/draft-ietf-tcpm-
-              accurate-ecn-12.txt>.
+              Draft, draft-ietf-tcpm-accurate-ecn-14, 22 February 2021,
+              <https://www.ietf.org/archive/id/draft-ietf-tcpm-accurate-
+              ecn-14.txt>.
 
    [AltMark]  Fioccola, G., Ed., Capello, A., Cociglio, M., Castaldelli,
               L., Chen, M., Zheng, L., Mirsky, G., and T. Mizrahi,
@@ -1931,43 +2066,42 @@ Internet-Draft             Delay and Loss bits             November 2020
               Research Workshop, DOI 10.1145/3340301.3341127, July 2019,
               <https://doi.org/10.1145/3340301.3341127>.
 
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 37]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    [I-D.trammell-ippm-spin]
               Trammell, B., "An Explicit Transport-Layer Signal for
               Hybrid RTT Measurement", Work in Progress, Internet-Draft,
               draft-trammell-ippm-spin-00, 9 January 2019,
-              <http://www.ietf.org/internet-drafts/draft-trammell-ippm-
-              spin-00.txt>.
+              <https://www.ietf.org/archive/id/draft-trammell-ippm-spin-
+              00.txt>.
 
    [I-D.trammell-tsvwg-spin]
               Trammell, B., "A Transport-Independent Explicit Signal for
               Hybrid RTT Measurement", Work in Progress, Internet-Draft,
               draft-trammell-tsvwg-spin-00, 2 July 2018,
-              <http://www.ietf.org/internet-drafts/draft-trammell-tsvwg-
+              <https://www.ietf.org/archive/id/draft-trammell-tsvwg-
               spin-00.txt>.
 
    [IPv6AltMark]
               Fioccola, G., Zhou, T., Cociglio, M., Qin, F., and R.
               Pang, "IPv6 Application of the Alternate Marking Method",
               Work in Progress, Internet-Draft, draft-ietf-6man-ipv6-
-              alt-mark-02, 13 October 2020, <http://www.ietf.org/
-              internet-drafts/draft-ietf-6man-ipv6-alt-mark-02.txt>.
-
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 35]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
+              alt-mark-03, 28 January 2021,
+              <https://www.ietf.org/archive/id/draft-ietf-6man-ipv6-alt-
+              mark-03.txt>.
 
    [QUIC-TRANSPORT]
               Iyengar, J. and M. Thomson, "QUIC: A UDP-Based Multiplexed
               and Secure Transport", Work in Progress, Internet-Draft,
-              draft-ietf-quic-transport-32, 20 October 2020,
-              <http://www.ietf.org/internet-drafts/draft-ietf-quic-
-              transport-32.txt>.
+              draft-ietf-quic-transport-34, 14 January 2021,
+              <https://www.ietf.org/archive/id/draft-ietf-quic-
+              transport-34.txt>.
 
    [RFC8517]  Dolson, D., Ed., Snellman, J., Boucadair, M., Ed., and C.
               Jacquenet, "An Inventory of Transport-Centric Functions
@@ -1980,43 +2114,42 @@ Internet-Draft             Delay and Loss bits             November 2020
               RFC 8701, DOI 10.17487/RFC8701, January 2020,
               <https://www.rfc-editor.org/info/rfc8701>.
 
-   [SPIN-BIT] Trammell, B., Vaere, P., Even, R., Fioccola, G., Fossati,
-              T., Ihlar, M., Morton, A., and S. Emile, "Adding Explicit
-              Passive Measurability of Two-Way Latency to the QUIC
-              Transport Protocol", Work in Progress, Internet-Draft,
-              draft-trammell-quic-spin-03, 14 May 2018,
-              <http://www.ietf.org/internet-drafts/draft-trammell-quic-
-              spin-03.txt>.
+   [SPIN-BIT] Trammell, B., Vaere, P. D., Even, R., Fioccola, G.,
+              Fossati, T., Ihlar, M., Morton, A., and E. Stephan,
+              "Adding Explicit Passive Measurability of Two-Way Latency
+              to the QUIC Transport Protocol", Work in Progress,
+              Internet-Draft, draft-trammell-quic-spin-03, 14 May 2018,
+              <https://www.ietf.org/archive/id/draft-trammell-quic-spin-
+              03.txt>.
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 38]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
 
    [TRANSPORT-ENCRYPT]
               Fairhurst, G. and C. Perkins, "Considerations around
               Transport Header Confidentiality, Network Operations, and
               the Evolution of Internet Transport Protocols", Work in
               Progress, Internet-Draft, draft-ietf-tsvwg-transport-
-              encrypt-17, 8 September 2020, <http://www.ietf.org/
-              internet-drafts/draft-ietf-tsvwg-transport-encrypt-
-              17.txt>.
+              encrypt-19, 29 January 2021,
+              <https://www.ietf.org/archive/id/draft-ietf-tsvwg-
+              transport-encrypt-19.txt>.
 
    [UDP-OPTIONS]
               Touch, J., "Transport Options for UDP", Work in Progress,
-              Internet-Draft, draft-ietf-tsvwg-udp-options-08, 12
-              September 2019, <http://www.ietf.org/internet-drafts/
-              draft-ietf-tsvwg-udp-options-08.txt>.
+              Internet-Draft, draft-ietf-tsvwg-udp-options-09, 25
+              November 2020, <https://www.ietf.org/archive/id/draft-
+              ietf-tsvwg-udp-options-09.txt>.
 
    [UDP-SURPLUS]
               Herbert, T., "UDP Surplus Header", Work in Progress,
               Internet-Draft, draft-herbert-udp-space-hdr-01, 8 July
-              2019, <http://www.ietf.org/internet-drafts/draft-herbert-
-              udp-space-hdr-01.txt>.
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 36]
-
-Internet-Draft             Delay and Loss bits             November 2020
-
+              2019, <https://www.ietf.org/archive/id/draft-herbert-udp-
+              space-hdr-01.txt>.
 
 Authors' Addresses
 
@@ -2044,6 +2177,15 @@ Authors' Addresses
    Email: giuseppe.fioccola@huawei.com
 
 
+
+
+
+
+Cociglio, et al.         Expires 27 August 2021                [Page 39]
+
+Internet-Draft             Delay and Loss bits             February 2021
+
+
    Igor Lubashev
    Akamai Technologies
 
@@ -2063,15 +2205,6 @@ Authors' Addresses
    Orange Labs
 
    Email: isabelle.hamchaoui@orange.com
-
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 37]
-
-Internet-Draft             Delay and Loss bits             November 2020
 
 
    Massimo Nilo
@@ -2104,25 +2237,4 @@ Internet-Draft             Delay and Loss bits             November 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Cociglio, et al.           Expires 6 May 2021                  [Page 38]
+Cociglio, et al.         Expires 27 August 2021                [Page 40]
